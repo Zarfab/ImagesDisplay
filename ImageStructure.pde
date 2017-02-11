@@ -7,14 +7,23 @@ class ImageStructure {
   private PVector thumbnailCenter;
   private PVector thumbnailTopLeft;
   private PVector thumbnailBottomRight;
-  private boolean selected;
   
+  public ImageStructure() {
+    init();
+  }
   
   public ImageStructure(String path) {
+    init();
     load(path);
   }
   
-  public ImageStructure() {
+  public ImageStructure(String path, float posx, float posy) {
+    init();
+    load(path);
+    setCenterPosition(posx, posy);
+  }
+  
+  private void init() {
     imagePath = "";
     img = null;
     thumbnail = null;
@@ -26,9 +35,18 @@ class ImageStructure {
     }
     catch (Exception e){
       println(e);
+      return;
     }
+    println("Image loaded from "+path);
+    
     imagePath = path;
     aspectRatio = (float)img.width / (float)img.height;
+    float screenAspectRatio = (float)width / (float)height;
+    if(aspectRatio > screenAspectRatio) {
+      img.resize(int(width*0.8), 0);
+    } else {
+      img.resize(0, int(height*0.8));
+    }
     thumbnail = img.copy();
     if(aspectRatio > 1) {
       thumbnail.resize(thumbnailSize, 0);
@@ -40,8 +58,25 @@ class ImageStructure {
     thumbnailBottomRight = new PVector(thumbnailCenter.x + thumbnail.width/2, thumbnailCenter.y + thumbnail.height/2);
   }
   
-  public void draw() {
-    
+  public void setCenterPosition(float x, float y) {
+    thumbnailCenter.x = x;
+    thumbnailCenter.y = y;
+    thumbnailTopLeft.x = thumbnailCenter.x - thumbnail.width/2;
+    thumbnailTopLeft.y = thumbnailCenter.y - thumbnail.height/2;
+    thumbnailBottomRight.x = thumbnailCenter.x + thumbnail.width/2;
+    thumbnailBottomRight.y = thumbnailCenter.y + thumbnail.height/2;
+  }
+  
+  public PVector getCenter() {
+    return thumbnailCenter;
+  }
+  
+  public void drawThumbnail() {
+    image(thumbnail, thumbnailCenter.x, thumbnailCenter.y);
+  }
+  
+  public void drawEnlarged() {   
+    image(img, width/2, height/2);
   }
   
   public boolean mouseOverThumbnail() {
@@ -55,16 +90,12 @@ class ImageStructure {
     
   }
   
-  public boolean selected() {
-    return selected;
-  }
-  
-  public void select() {
-    selected = true;
-  }
-  
-  public void deselect() {
-    selected = false;
+  public float[] getRect() {
+    float rect[] = {thumbnailTopLeft.x, 
+                    thumbnailTopLeft.y, 
+                    thumbnailBottomRight.x - thumbnailTopLeft.x,
+                    thumbnailBottomRight.y - thumbnailTopLeft.y};
+    return rect;
   }
   
   public String toString() {
