@@ -1,6 +1,7 @@
 import drop.*;
 
 final int thumbnailSize = 128;
+final int buttonSize = 32;
 final color selectionColor = color(240, 240, 255);
 final color backgroundColor = color(24, 12, 6);
 
@@ -13,6 +14,8 @@ boolean selectedEnlarged = false;
 boolean selectedMoving = false;
 PVector movingOffset = new PVector();
 
+ImageButton closeButton, enlargeButton, reduceButton;
+
 void setup() {
   fullScreen(2);
   cursor(CROSS);
@@ -22,6 +25,10 @@ void setup() {
   drop = new SDrop(this);
   
   images = new ArrayList<ImageStructure>();
+  
+  closeButton = new ImageButton(new String[]{"GUI/close0.png", "GUI/close1.png", "GUI/close2.png"}, buttonSize);
+  enlargeButton = new ImageButton(new String[]{"GUI/enlarge0.png", "GUI/enlarge1.png", "GUI/enlarge2.png"}, buttonSize);
+  reduceButton = new ImageButton(new String[]{"GUI/reduce0.png", "GUI/reduce1.png", "GUI/reduce2.png"}, buttonSize);
 }
 
 void draw() {
@@ -39,6 +46,9 @@ void draw() {
     else {
       if(selectedEnlarged) {
         lastImg.drawEnlarged();
+        PVector reduceButtonPosition = lastImg.getBottomLeftCorner();
+        reduceButtonPosition.y -= reduceButton.getSize().y;
+        reduceButton.drawAt(reduceButtonPosition);
       }
       else {
         if(selectedMoving) {
@@ -51,7 +61,8 @@ void draw() {
         rect(imgRect[0], imgRect[1], imgRect[2], imgRect[3]);
         lastImg.drawThumbnail();
         // Draw thumbnail controls
-        
+        closeButton.drawAt(new PVector(imgRect[0] + imgRect[2] - closeButton.getSize().x, imgRect[1]));
+        enlargeButton.drawAt(new PVector(imgRect[0], imgRect[1] + imgRect[3] - closeButton.getSize().y));
       }
     }
   }
@@ -75,7 +86,33 @@ void mousePressed() {
 }
 
 void mouseReleased() {
-  selectedMoving = false;
+  if(selectedEnlarged) {  
+      selectedEnlarged = !reduceButton.mouseOver();
+    return;
+  }
+  
+  if(lastImageSelected) {
+    selectedMoving = false;
+    if(!images.get(images.size()-1).mouseOverThumbnail()) {
+      lastImageSelected = false;
+      return;
+    }
+    if(closeButton.mouseOver()) {
+      closeSelected();
+      return;
+    }
+    if(enlargeButton.mouseOver()) {
+      selectedEnlarged = true;
+      return;
+    }
+  }
+}
+
+void closeSelected() {
+  if(lastImageSelected) {
+    images.remove(images.size() - 1);
+    lastImageSelected = false;
+  }
 }
 
 void dropEvent(DropEvent dropEvent) {
@@ -85,12 +122,10 @@ void dropEvent(DropEvent dropEvent) {
   }
   if(dropEvent.isFile()) {
     File droppedFile = dropEvent.file();
-    
     // if just one file has been dropped
     if(droppedFile.isFile()) {
       images.add(new ImageStructure(droppedFile.getPath(), dropEvent.x(), dropEvent.y()));
     }
-    
     // if a directory has been dropped
     if(droppedFile.isDirectory()) {
       // list files in the directory

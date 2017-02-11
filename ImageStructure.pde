@@ -8,6 +8,9 @@ class ImageStructure {
   private PVector thumbnailTopLeft;
   private PVector thumbnailBottomRight;
   
+  private PVector imageTopLeft;
+  private PVector imageBottomRight;
+  
   public ImageStructure() {
     init();
   }
@@ -44,8 +47,12 @@ class ImageStructure {
     float screenAspectRatio = (float)width / (float)height;
     if(aspectRatio > screenAspectRatio) {
       img.resize(int(width*0.8), 0);
+      imageTopLeft = new PVector(width*0.1, (height - img.height) * 0.5);
+      imageBottomRight = new PVector(width*0.9, (height + img.height) * 0.5);
     } else {
       img.resize(0, int(height*0.8));
+      imageTopLeft = new PVector((width - img.width)*0.5, height * 0.1);
+      imageBottomRight = new PVector((width + img.width)*0.5, height * 0.9);
     }
     thumbnail = img.copy();
     if(aspectRatio > 1) {
@@ -86,16 +93,16 @@ class ImageStructure {
           mouseY <= thumbnailBottomRight.y;
   }
   
-  public void update() {
-    
-  }
-  
   public float[] getRect() {
     float rect[] = {thumbnailTopLeft.x, 
                     thumbnailTopLeft.y, 
                     thumbnailBottomRight.x - thumbnailTopLeft.x,
                     thumbnailBottomRight.y - thumbnailTopLeft.y};
     return rect;
+  }
+  
+  public PVector getBottomLeftCorner() {
+    return new PVector(imageTopLeft.x, imageBottomRight.y);
   }
   
   public String toString() {
