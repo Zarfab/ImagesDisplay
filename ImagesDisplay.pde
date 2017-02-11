@@ -1,6 +1,6 @@
 import drop.*;
 
-final int thumbnailSize = 128;
+final int thumbnailSize = 196;
 final int buttonSize = 32;
 final color selectionColor = color(240, 240, 255);
 final color backgroundColor = color(24, 12, 6);
@@ -110,7 +110,8 @@ void mouseReleased() {
 
 void closeSelected() {
   if(lastImageSelected) {
-    images.remove(images.size() - 1);
+    ImageStructure toRemove = images.remove(images.size() - 1);
+    println("Image removed : "+toRemove);
     lastImageSelected = false;
   }
 }

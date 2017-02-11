@@ -33,36 +33,39 @@ class ImageStructure {
   }
   
   public void load(String path) {
-    try {
-      img = loadImage(path);
-    }
-    catch (Exception e){
-      println(e);
-      return;
-    }
-    println("Image loaded from "+path);
-    
-    imagePath = path;
-    aspectRatio = (float)img.width / (float)img.height;
-    float screenAspectRatio = (float)width / (float)height;
-    if(aspectRatio > screenAspectRatio) {
-      img.resize(int(width*0.8), 0);
-      imageTopLeft = new PVector(width*0.1, (height - img.height) * 0.5);
-      imageBottomRight = new PVector(width*0.9, (height + img.height) * 0.5);
+    if(path.toLowerCase().endsWith("png") || path.toLowerCase().endsWith("jpg") || path.toLowerCase().endsWith("jpeg")) {
+      try {
+        img = loadImage(path);
+      }
+      catch (Exception e){
+        println(e);
+      }
+      println("Image loaded from "+path);
+      
+      imagePath = path;
+      aspectRatio = (float)img.width / (float)img.height;
+      float screenAspectRatio = (float)width / (float)height;
+      if(aspectRatio > screenAspectRatio) {
+        img.resize(int(width*0.8), 0);
+        imageTopLeft = new PVector(width*0.1, (height - img.height) * 0.5);
+        imageBottomRight = new PVector(width*0.9, (height + img.height) * 0.5);
+      } else {
+        img.resize(0, int(height*0.8));
+        imageTopLeft = new PVector((width - img.width)*0.5, height * 0.1);
+        imageBottomRight = new PVector((width + img.width)*0.5, height * 0.9);
+      }
+      thumbnail = img.copy();
+      if(aspectRatio > 1) {
+        thumbnail.resize(thumbnailSize, 0);
+      } else {
+        thumbnail.resize(0, thumbnailSize);
+      }
+      thumbnailCenter = new PVector(random(thumbnailSize/2, width-thumbnailSize), random(thumbnailSize/2, height-thumbnailSize));
+      thumbnailTopLeft = new PVector(thumbnailCenter.x - thumbnail.width/2, thumbnailCenter.y - thumbnail.height/2);
+      thumbnailBottomRight = new PVector(thumbnailCenter.x + thumbnail.width/2, thumbnailCenter.y + thumbnail.height/2);
     } else {
-      img.resize(0, int(height*0.8));
-      imageTopLeft = new PVector((width - img.width)*0.5, height * 0.1);
-      imageBottomRight = new PVector((width + img.width)*0.5, height * 0.9);
+      println(path + " is not a jpg or png image");
     }
-    thumbnail = img.copy();
-    if(aspectRatio > 1) {
-      thumbnail.resize(thumbnailSize, 0);
-    } else {
-      thumbnail.resize(0, thumbnailSize);
-    }
-    thumbnailCenter = new PVector(random(thumbnailSize/2, width-thumbnailSize), random(thumbnailSize/2, height-thumbnailSize));
-    thumbnailTopLeft = new PVector(thumbnailCenter.x - thumbnail.width/2, thumbnailCenter.y - thumbnail.height/2);
-    thumbnailBottomRight = new PVector(thumbnailCenter.x + thumbnail.width/2, thumbnailCenter.y + thumbnail.height/2);
   }
   
   public void setCenterPosition(float x, float y) {
