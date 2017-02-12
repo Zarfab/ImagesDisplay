@@ -96,6 +96,13 @@ class ImageStructure {
           mouseY <= thumbnailBottomRight.y;
   }
   
+  public boolean mouseOverEnlarged() {
+    return mouseX >= imageTopLeft.x && 
+          mouseY >= imageTopLeft.y && 
+          mouseX <= imageBottomRight.x && 
+          mouseY <= imageBottomRight.y;
+  }
+  
   public float[] getRect() {
     float rect[] = {thumbnailTopLeft.x, 
                     thumbnailTopLeft.y, 

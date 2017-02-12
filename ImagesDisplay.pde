@@ -1,12 +1,13 @@
 import drop.*;
 
-final int thumbnailSize = 196;
+final int thumbnailSize = 256;
 final int buttonSize = 32;
 final color selectionColor = color(240, 240, 255);
 final color backgroundColor = color(24, 12, 6);
 
 
 SDrop drop;
+long mouseReleasedT0;
 
 ArrayList<ImageStructure> images;
 boolean lastImageSelected = false;
@@ -68,6 +69,18 @@ void draw() {
   }
 }
 
+void keyReleased() {
+  switch(key) {
+   case DELETE:
+      closeSelected();
+      break;
+    case ' ':
+      break;
+    default:
+      break;
+  }
+}
+
 void mousePressed() {
   if(! selectedEnlarged) {
     for(int i = images.size() - 1; i >= 0; i--) {
@@ -86,22 +99,31 @@ void mousePressed() {
 }
 
 void mouseReleased() {
-  if(selectedEnlarged) {  
-      selectedEnlarged = !reduceButton.mouseOver();
-    return;
+  boolean doubleClick = millis() - mouseReleasedT0 < 500;
+  mouseReleasedT0 = millis();
+  
+  if(selectedEnlarged) {
+    // reduce image if click on reduce button or double click on enlarged image
+    if(images.get(images.size()-1).mouseOverEnlarged() && doubleClick || reduceButton.mouseOver()) {
+      selectedEnlarged = false;
+      return;
+    }
   }
   
   if(lastImageSelected) {
     selectedMoving = false;
+    // deselect image if simple click anywhere else
     if(!images.get(images.size()-1).mouseOverThumbnail()) {
       lastImageSelected = false;
       return;
     }
+    // from here, we are sure mouse is over selected image thumbnail
     if(closeButton.mouseOver()) {
       closeSelected();
       return;
     }
-    if(enlargeButton.mouseOver()) {
+    // enlarge thumbnail if click on enlrage button or double click on thumbnail
+    if(enlargeButton.mouseOver() || doubleClick) {
       selectedEnlarged = true;
       return;
     }
@@ -113,6 +135,7 @@ void closeSelected() {
     ImageStructure toRemove = images.remove(images.size() - 1);
     println("Image removed : "+toRemove);
     lastImageSelected = false;
+    selectedEnlarged = false;
   }
 }
 
