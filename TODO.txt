@@ -2,10 +2,12 @@
 [ ] Save / Load current configuration (file paths and thumbnail position) (Buttons && CTRL + S / O)
 [ ] CTRL + mouse wheel to change thumbnail size
 [ ] Cancel last action (Button & CTRL + Z)
-[ ] Create class "MediaStructure"
+[X] Create class "MediaStructure"
 [ ] Create class "VideoStructure"
 	[ ] Thumbnail in jpg or png with the same name as video file, take middle frame if no thumbnail
 	[ ] Play / Pause button
 	[ ] Playing bar to modify play position 
 [ ] Load folder in the same area
 [ ] When loading several files, not superpose them
+
+[ ] Double click bug
