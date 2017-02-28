@@ -1,6 +1,7 @@
 abstract class MediaStructure {
   protected String mediaPath;
   protected PImage thumbnail;
+  protected PImage initialThumbnail;
   protected float aspectRatio;
   
   protected PVector thumbnailCenter;
@@ -33,6 +34,19 @@ abstract class MediaStructure {
   
   public void drawThumbnail() {
     image(thumbnail, thumbnailCenter.x, thumbnailCenter.y);
+  }
+  
+  public void updateThumbnailSize() {
+    thumbnail = initialThumbnail.copy();
+    if(aspectRatio > 1) {
+      thumbnail.resize(thumbnailSize, 0);
+    } else {
+      thumbnail.resize(0, thumbnailSize);
+    }
+    thumbnailTopLeft.x = thumbnailCenter.x - thumbnail.width/2;
+    thumbnailTopLeft.y = thumbnailCenter.y - thumbnail.height/2;
+    thumbnailBottomRight.x = thumbnailCenter.x + thumbnail.width/2;
+    thumbnailBottomRight.y = thumbnailCenter.y + thumbnail.height/2;
   }
   
   public boolean mouseOverThumbnail() {

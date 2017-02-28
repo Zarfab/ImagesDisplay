@@ -1,6 +1,6 @@
 [ ] Config file for generic parameters
 [ ] Save / Load current configuration (file paths and thumbnail position) (Buttons && CTRL + S / O)
-[ ] CTRL + mouse wheel to change thumbnail size
+[X] CTRL + mouse wheel to change thumbnail size
 [ ] Cancel last action (Button & CTRL + Z)
 [X] Create class "MediaStructure"
 [ ] Create class "VideoStructure"
@@ -10,4 +10,6 @@
 [ ] Load folder in the same area
 [ ] When loading several files, not superpose them
 
-[ ] Double click bug
+[X] Double click bug
+[ ] Multiple selection (rectangle around all thumbnails or control + click)
+

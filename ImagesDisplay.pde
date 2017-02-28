@@ -1,5 +1,6 @@
 import drop.*;
 
+final int thumbnailSizeIncrement = 16;
 final int buttonSize = 32;
 final color selectionColor = color(240, 240, 255);
 final color backgroundColor = color(24, 12, 6);
@@ -125,6 +126,22 @@ void mouseReleased(MouseEvent e) {
     if(enlargeButton.mouseOver() || doubleClick) {
       selectedEnlarged = true;
       return;
+    }
+  }
+}
+
+void mouseWheel(MouseEvent event) {
+  if(keyPressed && keyCode == CONTROL) {
+    thumbnailSize += -1 * thumbnailSizeIncrement * event.getCount();
+    if(thumbnailSize <= 2 * buttonSize) {
+      thumbnailSize = 2 * buttonSize;
+    }
+    if(thumbnailSize >= height / 2) {
+      thumbnailSize =  height / 2;
+    }
+    println("new thumbnail size = "+thumbnailSize);
+    for(MediaStructure m : mediaContent) {
+      m.updateThumbnailSize();
     }
   }
 }

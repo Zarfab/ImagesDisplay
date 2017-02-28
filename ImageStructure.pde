@@ -38,7 +38,8 @@ class ImageStructure extends MediaStructure {
         mediaTopLeft = new PVector((width - img.width)*0.5, height * 0.1);
         mediaBottomRight = new PVector((width + img.width)*0.5, height * 0.9);
       }
-      thumbnail = img.copy();
+      initialThumbnail = img.copy();
+      thumbnail = initialThumbnail.copy();
       if(aspectRatio > 1) {
         thumbnail.resize(thumbnailSize, 0);
       } else {
