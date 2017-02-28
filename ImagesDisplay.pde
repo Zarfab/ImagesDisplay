@@ -1,13 +1,13 @@
 import drop.*;
 
-final int thumbnailSize = 256;
 final int buttonSize = 32;
 final color selectionColor = color(240, 240, 255);
 final color backgroundColor = color(24, 12, 6);
 
 
 SDrop drop;
-long mouseReleasedT0;
+
+int thumbnailSize = 256;
 
 ArrayList<MediaStructure> mediaContent;
 boolean lastMediaSelected = false;
@@ -98,16 +98,15 @@ void mousePressed() {
   }
 }
 
-void mouseReleased() {
-  boolean doubleClick = millis() - mouseReleasedT0 < 500;
-  mouseReleasedT0 = millis();
+void mouseReleased(MouseEvent e) {
+  boolean doubleClick = e.getCount() == 2;
   
   if(selectedEnlarged) {
     // reduce image if click on reduce button or double click on enlarged image
     if(mediaContent.get(mediaContent.size()-1).mouseOverEnlarged() && doubleClick || reduceButton.mouseOver()) {
       selectedEnlarged = false;
-      return;
     }
+    return;
   }
   
   if(lastMediaSelected) {
