@@ -156,24 +156,45 @@ void closeSelected() {
 }
 
 void dropEvent(DropEvent dropEvent) {
+  // save currently selected media to push it back at the end
+  // so that it stays the last item of mediaContent
   MediaStructure selected = null;
   if(lastMediaSelected) {
     selected = mediaContent.remove(mediaContent.size() - 1);
   }
+  
   if(dropEvent.isFile()) {
     File droppedFile = dropEvent.file();
     // if just one file has been dropped
     if(droppedFile.isFile()) {
-      mediaContent.add(new ImageStructure(droppedFile.getPath(), dropEvent.x(), dropEvent.y()));
+      ImageStructure toAdd = null;
+      try {
+        toAdd = new ImageStructure(droppedFile.getPath(), dropEvent.x(), dropEvent.y());
+      } catch (Exception e) {
+        println(e);
+      }
+      if(toAdd != null) {
+        mediaContent.add(toAdd);
+      }
     }
     // if a directory has been dropped
     if(droppedFile.isDirectory()) {
       // list files in the directory
       for(File f : droppedFile.listFiles()) {
-        mediaContent.add(new ImageStructure(f.getPath()));
+        ImageStructure toAdd = null;
+        try {
+          toAdd = new ImageStructure(f.getPath());
+        } catch (Exception e) {
+          println(e);
+        }
+        if(toAdd != null) {
+          mediaContent.add(toAdd);
+        }
       }
     }
   }
+  
+  // push back selected item
   if(selected != null) {
     mediaContent.add(selected);
   }

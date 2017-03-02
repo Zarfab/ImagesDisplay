@@ -49,7 +49,7 @@ class ImageStructure extends MediaStructure {
       thumbnailTopLeft = new PVector(thumbnailCenter.x - thumbnail.width/2, thumbnailCenter.y - thumbnail.height/2);
       thumbnailBottomRight = new PVector(thumbnailCenter.x + thumbnail.width/2, thumbnailCenter.y + thumbnail.height/2);
     } else {
-      println(path + " is not a jpg or png image");
+      throw new IllegalArgumentException(path + " is not a jpg or png image");
     }
   }
   
