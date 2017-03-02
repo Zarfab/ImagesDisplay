@@ -20,7 +20,7 @@ ImageButton closeButton, enlargeButton, reduceButton;
 
 
 void setup() {
-  fullScreen(1);
+  fullScreen(2);
   cursor(CROSS);
   imageMode(CENTER);
   rectMode(CORNER);
@@ -139,8 +139,8 @@ void mouseReleased(MouseEvent e) {
 void mouseWheel(MouseEvent event) {
   if(keyPressed && keyCode == CONTROL) {
     thumbnailSize += -1 * thumbnailSizeIncrement * event.getCount();
-    if(thumbnailSize <= 2 * buttonSize) {
-      thumbnailSize = 2 * buttonSize;
+    if(thumbnailSize <= 4 * buttonSize) {
+      thumbnailSize = 4 * buttonSize;
     }
     if(thumbnailSize >= height / 2) {
       thumbnailSize =  height / 2;
