@@ -18,8 +18,9 @@ PVector movingOffset = new PVector();
 
 ImageButton closeButton, enlargeButton, reduceButton;
 
+
 void setup() {
-  fullScreen(2);
+  fullScreen(1);
   cursor(CROSS);
   imageMode(CENTER);
   rectMode(CORNER);
@@ -47,6 +48,11 @@ void draw() {
     }
     else {
       if(selectedEnlarged) {
+        pushStyle();
+        fill(backgroundColor, 156);
+        noStroke();
+        rect(0, 0, width, height);
+        popStyle();
         lastMedia.drawEnlarged();
         PVector reduceButtonPosition = lastMedia.getBottomLeftCorner();
         reduceButtonPosition.y -= reduceButton.getSize().y;
