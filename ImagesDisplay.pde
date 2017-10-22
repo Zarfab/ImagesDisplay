@@ -20,8 +20,8 @@ PVector movingOffset = new PVector();
 ImageButton closeButton, enlargeButton, reduceButton;
 
 void setup() {
-  //fullScreen(2);
-  size(800, 600);
+  fullScreen(2);
+  //size(800, 600);
   cursor(CROSS);
   imageMode(CENTER);
   rectMode(CORNER);
@@ -77,12 +77,14 @@ void keyPressed() {
   if(key != CODED) {
     switch(key) {
      case DELETE:
-          if(codedKeysDown[CONTROL])
-            closeAll();
-          else
-            closeSelected();
+        if(codedKeysDown[CONTROL])
+          closeAll();
+        else
+          closeSelected();
         break;
       case ' ':
+        if(codedKeysDown[CONTROL])
+          organizeAsGrid();
         break;
       default:
         break;
@@ -150,8 +152,8 @@ void mouseReleased(MouseEvent e) {
 void mouseWheel(MouseEvent event) {
   if(codedKeysDown[CONTROL]) {
     thumbnailSize += -1 * thumbnailSizeIncrement * event.getCount();
-    if(thumbnailSize <= 2 * buttonSize) {
-      thumbnailSize = 2 * buttonSize;
+    if(thumbnailSize <= 4 * buttonSize) {
+      thumbnailSize = 4 * buttonSize;
     }
     if(thumbnailSize >= height / 2) {
       thumbnailSize =  height / 2;
@@ -175,6 +177,33 @@ void closeSelected() {
     lastMediaSelected = false;
     selectedEnlarged = false;
   }
+}
+
+void organizeAsGrid() {
+  int maxTiles = floor(width/thumbnailSize) * floor(height/thumbnailSize);
+  while(thumbnailSize > 4 * buttonSize && maxTiles < mediaContent.size()) {
+    thumbnailSize -= thumbnailSizeIncrement;
+    maxTiles = floor(width/thumbnailSize) * floor(height/thumbnailSize);
+  }
+  if(thumbnailSize <= 2 * buttonSize) {
+    thumbnailSize = 2 * buttonSize;
+  }
+  int i = 0, j = 0;
+  float xspace = ((float)width - floor(width/thumbnailSize) * thumbnailSize) / (floor(width/thumbnailSize)-1);
+  float yspace = ((float)height - floor(height/thumbnailSize) * thumbnailSize) / (floor(height/thumbnailSize)-1);
+  for(MediaStructure m : mediaContent) {
+    m.updateThumbnailSize();
+    float x = i * (thumbnailSize + xspace) + thumbnailSize/2;
+    float y = j * (thumbnailSize + yspace) + thumbnailSize/2;
+    m.setThumbnailCenterPosition(x, y);
+    
+    i++;
+    if(i * thumbnailSize + thumbnailSize / 2 >= width) {
+      i = 0;
+      j++;
+    }
+  }
+  
 }
 
 void dropEvent(DropEvent dropEvent) {
