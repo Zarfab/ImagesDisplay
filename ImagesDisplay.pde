@@ -7,6 +7,7 @@ final color backgroundColor = color(24, 12, 6);
 
 
 SDrop drop;
+boolean codedKeysDown[];
 
 int thumbnailSize = 256;
 
@@ -19,7 +20,8 @@ PVector movingOffset = new PVector();
 ImageButton closeButton, enlargeButton, reduceButton;
 
 void setup() {
-  fullScreen(2);
+  //fullScreen(2);
+  size(800, 600);
   cursor(CROSS);
   imageMode(CENTER);
   rectMode(CORNER);
@@ -27,6 +29,7 @@ void setup() {
   drop = new SDrop(this);
   
   mediaContent = new ArrayList<MediaStructure>();
+  codedKeysDown = new boolean[256];
   
   closeButton = new ImageButton(new String[]{"GUI/close0.png", "GUI/close1.png", "GUI/close2.png"}, buttonSize);
   enlargeButton = new ImageButton(new String[]{"GUI/enlarge0.png", "GUI/enlarge1.png", "GUI/enlarge2.png"}, buttonSize);
@@ -70,15 +73,29 @@ void draw() {
   }
 }
 
+void keyPressed() {
+  if(key != CODED) {
+    switch(key) {
+     case DELETE:
+          if(codedKeysDown[CONTROL])
+            closeAll();
+          else
+            closeSelected();
+        break;
+      case ' ':
+        break;
+      default:
+        break;
+    }
+  }
+  else {
+    codedKeysDown[keyCode] = true;
+  }
+}
+
 void keyReleased() {
-  switch(key) {
-   case DELETE:
-      closeSelected();
-      break;
-    case ' ':
-      break;
-    default:
-      break;
+  if(key == CODED) {
+    codedKeysDown[keyCode] = false;
   }
 }
 
@@ -131,7 +148,7 @@ void mouseReleased(MouseEvent e) {
 }
 
 void mouseWheel(MouseEvent event) {
-  if(keyPressed && keyCode == CONTROL) {
+  if(codedKeysDown[CONTROL]) {
     thumbnailSize += -1 * thumbnailSizeIncrement * event.getCount();
     if(thumbnailSize <= 2 * buttonSize) {
       thumbnailSize = 2 * buttonSize;
@@ -144,6 +161,11 @@ void mouseWheel(MouseEvent event) {
       m.updateThumbnailSize();
     }
   }
+}
+
+void closeAll() {
+  mediaContent.clear();
+  println("All media removed");
 }
 
 void closeSelected() {

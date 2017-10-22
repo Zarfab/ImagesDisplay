@@ -12,4 +12,6 @@
 
 [X] Double click bug
 [ ] Multiple selection (rectangle around all thumbnails or control + click)
+[X] Delete all media (Control + Delete)
+
 
